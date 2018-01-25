@@ -1,0 +1,20 @@
+---
+title: "LAFF R course"
+subtitle: "by Daniel Viana"
+author: "Juan Carlos Villaseñor-Derbez"
+date: "24 de enero de 2018"
+output: html_document
+---
+
+# Exercises
+
+## Section 1
+- [Exercise 1](./S1E1.html) - Logistic growth model
+
+## Section 2
+
+## Section 3
+
+## Section 4
+
+## Section 5

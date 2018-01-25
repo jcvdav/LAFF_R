@@ -1,0 +1,264 @@
+---
+title: "Section 1 - Exercise 1"
+author: "Juan Carlos Villaseñor-Derbez"
+date: "24 de enero de 2018"
+output:
+  html_document:
+    code_folding: hide
+    toc: yes
+    toc_float: yes
+    toc_scroll: smooth
+---
+
+# Logistic growth model
+
+## a
+
+Write a logistic population growth model
+
+$$
+N_t = N_{t-1} + gN_{t-1}\left(1-\frac{N_{t-1}}{K}\right) -fN_{t-1}
+$$
+
+### Define parameters
+
+```{r}
+g <- 0.5 # growth rate
+K <- 100 # carrying capacity
+f <- 0.3 # fishing mortality
+
+time = c(1:50) # vector with times
+N <- rep(NA, length = length(t)) # vector (with NAs) with the same length as times
+N[1] <- 50 # define population at time t = 1
+```
+
+### Simulate population growth
+
+```{r}
+# For loop that iterates over time
+for(t in 2:max(time)){
+  N[t] <- N[t-1] + (g*N[t-1]*(1-(N[t-1]/K))) - f*N[t-1]
+}
+```
+
+### Tasks
+
+### 1) Plot population size over time
+
+```{r, fig.cap = "Population size over time"}
+suppressPackageStartupMessages(library(tidyverse))
+
+data.frame(time, population = N) %>% 
+  ggplot(aes(x = time, y = population)) +
+  geom_line() +
+  geom_point(color = "steelblue", size = 2) +
+  theme_classic()
+```
+
+#### 2) Plot yield over time
+
+```{r, "Yield over time"}
+data.frame(time, population = f*N) %>% 
+  ggplot(aes(x = time, y = population)) +
+  geom_line() +
+  geom_point(color = "steelblue", size = 2) +
+  theme_classic()
+```
+
+### Questions
+
+#### 1) What is the total yield in 50 years?
+
+```{r}
+yield <- sum(f*N)
+```
+
+>Total yield in 50 years is `r yield`.
+
+#### 2) What is the yield and population size in year 50?
+
+```{r}
+yield_t50 <- f*N[50]
+```
+
+>Yield at $t = 50$ is `r yield_t50`
+
+## b
+
+Test differente values of fishing mortality $f$
+
+### Tasks 
+
+#### Define parameters
+
+```{r}
+g <- 0.5 # growth rate
+K <- 100 # carrying capacity
+f_vec <- seq(0, 1, by = 0.1) # vector of fishing mortalities
+
+time = c(1:50) # vector with times
+N <- matrix(NA, nrow = length(time), ncol = length(f_vec)) # matrix (with NAs) with nrow as times and ncol as f_vec
+N[1, ] <- 50 # define population at time t = 1
+```
+
+#### Simulate population growth
+
+```{r}
+# for loop tha titerates over f_vec (do not confuse k with K)
+for (k in 1:length(f_vec)){
+  f <- f_vec[k] #define an f for this particular loop
+  # For loop that iterates over time
+  for(t in 2:max(time)){
+    N[t, k] <- N[t-1, k] + (g*N[t-1, k]*(1-(N[t-1, k]/K))) - f*N[t-1, k]
+  }
+}
+```
+
+#### 1) Plot population size over time, for each fishing mortality
+
+```{r}
+data.frame(time, N) %>% 
+  magrittr::set_colnames(c("time", paste("f = ", f_vec))) %>% 
+  gather(fishing_mortality, population, -time) %>% 
+  ggplot(aes(x = time, y = population, color = fishing_mortality, group = fishing_mortality)) +
+  geom_line(color = "black") +
+  geom_point() +
+  theme_classic()
+```
+
+#### 2) Plot yield over time for each fishing mortality
+
+```{r}
+data.frame(time, N) %>% 
+  magrittr::set_colnames(c("time", f_vec)) %>% 
+  gather(f, N, -time) %>% 
+  mutate(f = as.numeric(f),
+         Yield = f * N,
+         fishing_mortality = paste("f = ", formatC(f, digits = 0))) %>% 
+  ggplot(aes(x = time, y = Yield, color = fishing_mortality, group = fishing_mortality)) +
+  geom_line(color = "black") +
+  geom_point() +
+  theme_classic()
+```
+
+#### 3) Yield at year 50 for each fishing mortality
+
+```{r}
+data.frame(f = f_vec,
+           yield_50 = f_vec * N[50, ],
+           fishing_mortality = paste("f = ", formatC(f_vec, digits = 0))) %>% 
+  ggplot(aes(x = fishing_mortality, y = yield_50, fill = f)) +
+  geom_col() +
+  theme_classic()
+```
+
+#### 4) Total yield for each fishing mortality
+
+```{r}
+data.frame(time, N) %>% 
+  magrittr::set_colnames(c("time", f_vec)) %>% 
+  gather(f, N, -time) %>% 
+  mutate(f = as.numeric(f),
+         Yield = f * N,
+         fishing_mortality = paste("f = ", formatC(f, digits = 0))) %>% 
+  group_by(f, fishing_mortality) %>% 
+  summarize(Yield = sum(f * N)) %>% 
+  ggplot(aes(x = fishing_mortality, y = Yield, fill = f)) +
+  geom_col() +
+  theme_classic()
+```
+
+
+### Questions
+
+#### Which fishing mortality gives the largest total yield?
+
+>$f = 0.3$ gives the largest yield
+
+#### How does answer from 1) change if you model only 3 years? Why?
+
+
+```{r}
+g <- 0.5 # growth rate
+K <- 100 # carrying capacity
+f_vec <- seq(0, 1, by = 0.1) # vector of fishing mortalities
+
+time = c(1:3) # vector with times
+N <- matrix(NA, nrow = length(time), ncol = length(f_vec)) # matrix (with NAs) with nrow as times and ncol as f_vec
+N[1, ] <- 50 # define population at time t = 1
+```
+
+```{r}
+# for loop tha titerates over f_vec (do not confuse k with K)
+for (k in 1:length(f_vec)){
+  f <- f_vec[k] #define an f for this particular loop
+  # For loop that iterates over time
+  for(t in 2:max(time)){
+    N[t, k] <- N[t-1, k] + (g*N[t-1, k]*(1-(N[t-1, k]/K))) - f*N[t-1, k]
+  }
+}
+```
+
+```{r}
+data.frame(time, N) %>% 
+  magrittr::set_colnames(c("time", f_vec)) %>% 
+  gather(f, N, -time) %>% 
+  mutate(f = as.numeric(f),
+         Yield = f * N,
+         fishing_mortality = paste("f = ", formatC(f, digits = 0))) %>% 
+  group_by(f, fishing_mortality) %>% 
+  summarize(Yield = sum(f * N)) %>% 
+  ggplot(aes(x = fishing_mortality, y = Yield, fill = f)) +
+  geom_col() +
+  theme_classic()
+```
+
+>With a time horizon with 3 years, $f = 0.9$ gives the largest yield
+
+#### Which fishing mortality gives you the highest equilibrium yield (t = 50)?
+
+>$f = 0.3$ gives the largest yield at equilibrium
+
+#### What happens to answer 3) if you change the growth rate to 0.2? Why?
+
+```{r}
+g <- 0.2 # growth rate
+K <- 100 # carrying capacity
+f_vec <- seq(0, 1, by = 0.1) # vector of fishing mortalities
+
+time = c(1:50) # vector with times
+N <- matrix(NA, nrow = length(time), ncol = length(f_vec)) # matrix (with NAs) with nrow as times and ncol as f_vec
+N[1, ] <- 50 # define population at time t = 1
+```
+
+```{r}
+# for loop tha titerates over f_vec (do not confuse k with K)
+for (k in 1:length(f_vec)){
+  f <- f_vec[k] #define an f for this particular loop
+  # For loop that iterates over time
+  for(t in 2:max(time)){
+    N[t, k] <- N[t-1, k] + (g*N[t-1, k]*(1-(N[t-1, k]/K))) - f*N[t-1, k]
+  }
+}
+```
+
+```{r}
+data.frame(f = f_vec,
+           yield_50 = f_vec * N[50, ],
+           fishing_mortality = paste("f = ", formatC(f_vec, digits = 0))) %>% 
+  ggplot(aes(x = fishing_mortality, y = yield_50, fill = f)) +
+  geom_col() +
+  theme_classic()
+```
+
+>With $g = 0.2$, $f = 0.1$ gives the largest yield at equilibrium.
+
+#### Why is the optimal fishing mortality lower than the growth rate?
+
+>For population to persist, $f < g$
+
+
+
+
+
+
