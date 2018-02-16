@@ -78,7 +78,10 @@ Not working? Send me a message and we'll figure out a time to meet and see what'
 
 ## Files you'll need
 
-Sometime over the weekend (I'll send a message) I'll put the slides and templates here.
+Sometime over the weekend (I'll send a message) I'll put the slides and files we'll need here.
+
+- [Rmakrdown slides](villasenor-derbez.com/intro2Rmd/CourseMaterials/intro2Rmd.html) (Yes, I am re-using them)
+
 
 
 
