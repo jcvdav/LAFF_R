@@ -26,7 +26,9 @@ install.packages(c("deSolve",
                    "tidyverse",
                    "rmarkdown",
                    "knitr",
-                   "bookdown"))
+                   "bookdown",
+                   "magrittr",
+                   "cowplot"))
 ```
 
 If you are curious and can't wait until Tuesday, these is what they do:
