@@ -1,0 +1,64 @@
+\documentclass{frontiersSCNS}
+\usepackage{url,hyperref,lineno,microtype,subcaption}
+\usepackage[onehalfspacing]{setspace}
+\usepackage{float}
+
+
+\linenumbers
+
+\usepackage[utf8]{inputenc}
+\floatplacement{figure}{H}
+
+\def\keyFont{\fontsize{8}{11}\helveticabold }
+\def\firstAuthorLast{Villaseñor-Derbez {et~al.}}
+\def\Authors{$author$}
+% Affiliations should be keyed to the author's name with superscript numbers and be listed as follows: Laboratory, Institute, Department, Organization, City, State abbreviation (USA, Canada, Australia), and Country (without detailed address information such as city zip codes or street names).
+% If one of the authors has a change of address, list the new address below the correspondence details using a superscript symbol and use the same symbol to indicate the author in the author list.
+\def\Address{$institution$}
+% The Corresponding Author should be marked with an asterisk
+% Provide the exact contact address (this time including street name and city zip code) and email of the corresponding author
+\def\corrAuthor{$corrauth$}
+
+\def\corrEmail{$email$}
+
+\begin{document}
+\onecolumn
+\firstpage{1}
+
+\title[$rtitle$]{$title$} 
+
+\author[\firstAuthorLast ]{\Authors} %This field will be automatically populated
+\address{} %This field will be automatically populated
+\correspondance{} %This field will be automatically populated
+
+\extraAuth{}
+
+\maketitle
+
+
+$if(abstract)$
+
+\begin{abstract}
+
+$abstract$
+
+
+
+$if(keywords)$
+
+\medskip
+\tiny
+ \keyFont{ \section{Keywords:} $keywords$}
+
+$endif$
+
+
+\end{abstract}
+
+$endif$
+
+$body$
+
+
+
+\end{document}

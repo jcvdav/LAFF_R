@@ -1,0 +1,149 @@
+---
+title: "Trophic cascades and fisheries"
+rtitle: "Trophic cascades"
+author: "Juan Carlos Villaseñor-Derbez$^{*1}$"
+institution: "$^1$Bren School, UCSB"
+email: "jvillasenor@bren.ucsb.edu"
+abstract: "Fishing can change the whole system"
+keywords: "Fish, Fisheries, Trophic"
+corrauth: "Something"
+date: "16 de febrero de 2018"
+output:
+  bookdown::pdf_document2:
+    keep_tex: yes
+    template: template.tex
+    # number_sections: no
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = F, fig.width = 5, fig.height = 3)
+```
+
+# Introduction
+
+Marine reserves can yield benefits to tourism \citep{viana_2017}. People have looked at the ideal size of TURFs \citep{acevesbueno_2017}. Also, \citet{szuwalski_2017} showed that reducing predator abundances can increase catches of lower--trophic level fish.
+
+# Materials and methods
+
+We will use a two-species predator-prey model, described by:
+
+\begin{equation}
+\begin{split} \label{eq:pred_prey}
+\frac{dA}{dt} = I_AA - d_AA - aAS \\
+\frac{dS}{dt} = ar_SAS - d_SS -fS
+\end{split}
+\end{equation}
+
+```{r}
+suppressPackageStartupMessages({
+  library(knitr)
+  library(deSolve)
+  library(cowplot)
+  library(tidyverse)
+})
+```
+
+```{r}
+# Define parameters
+Ia <- 10
+da <- 0.2
+a <- 0.01
+rs <- 0.5
+ds <- 0.1
+f <- 0
+
+params <- c(Ia, da, a, rs, ds, f)
+
+# Define initial conditions
+A0 <- 2
+S0 <- 2
+
+values <- c(A0, S0)
+
+# Time
+t <- seq(0, 100)
+
+```
+
+
+```{r}
+predator_prey <- function(t, values, params){
+  # Extract parameters
+  Ia <- params[1]
+  da <- params[2]
+  a <- params[3]
+  rs <- params[4]
+  ds <- params[5]
+  f <- params[6]
+  
+  # Extract state variables
+  A <- values[1]
+  S <- values[2]
+  
+  dAdt <- Ia - (da*A) - (a*A*S)
+  dSdt <- (a*rs*A*S) - (ds*S) - (f*S)
+  
+  return(list(c(dAdt, dSdt)))
+}
+```
+
+```{r}
+no_fishing <- deSolve::lsoda(y = values, times = t, func = predator_prey, parms = params) %>% 
+  as.data.frame() %>% 
+  magrittr::set_colnames(value = c("Time", "Anchovies", "Sharks")) %>% 
+  gather(Species, Abundance, -Time) %>% 
+  mutate(Model = "No Fishing")
+```
+
+```{r}
+plot_no_fish <- ggplot(no_fishing, aes(x = Time, y = Abundance, color = Species)) +
+  geom_line(size = 1) +
+  scale_color_brewer(palette = "Set1")
+```
+
+
+```{r}
+f <- 0.05
+params <- c(Ia, da, a, rs, ds, f)
+
+fishing <- deSolve::lsoda(y = values, times = t, func = predator_prey, parms = params) %>% 
+  as.data.frame() %>% 
+  magrittr::set_colnames(value = c("Time", "Anchovies", "Sharks")) %>% 
+  gather(Species, Abundance, -Time) %>% 
+  mutate(Model = "Fishing")
+```
+
+```{r}
+plot_fish <- ggplot(fishing, aes(x = Time, y = Abundance, color = Species)) +
+  geom_line(size = 1) +
+  scale_color_brewer(palette = "Set1")
+```
+
+\clearpage
+
+# Results
+
+Using Equation \ref{eq:pred_prey} we obtain the dynamics of the system, shown in Figure \ref{fig:timeseries}. The stable equilibrium values are shown in Table \ref{tab:stable_eq}.
+
+```{r, fig.height = 5, fig.cap = "\\label{fig:timeseries}State variabel dynamics through time for an ecosystem without fishing (A) and with fishing (B)."}
+cowplot::plot_grid(plot_no_fish, plot_fish, ncol = 1, labels = "AUTO")
+```
+
+```{r}
+rbind(no_fishing, fishing) %>% 
+  filter(Time == 100) %>% 
+  spread(Model, Abundance) %>% 
+  select(-Time) %>% 
+  knitr::kable(digits = 2, caption = "\\label{tab:stable_eq}Stable equilibrium values for Sharks and Anchovies under fishing and no fishing conditions") %>% 
+  kableExtra::kable_styling(latex_options = "HOLD_position")
+```
+
+
+# Discusion and Conclusion
+
+Our results are not novel, because they had been shown before \citep{szuwalski_2017}.
+
+\clearpage
+
+\bibliographystyle{frontiersinSCNS_ENG_HUMS}
+\bibliography{references}
