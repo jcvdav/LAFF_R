@@ -43,20 +43,6 @@ Your default installation of some of the packages above will allow you to genera
 
 > Go to [https://miktex.org/download](https://miktex.org/download) and select your operating system
 
-## Reference Management
-
-During the class, we'll look at how we can keep track of our references while writing a report / document all within R. However, you'll need some references to cite, right? Perhaps you already use a reference manager like Zotero, Mendeley, OneNote or any other system. For the purpose of this class, it will be easier if we have a single system. I use F1000 Workspace, and so will you for this class.
-
-Some of the benefits from F1000 are:
-
-- All in the cloud, no need to install weird desktop applications that crash half of the time (also, you don't need to have all your PDFs i your computer)
-- Has pluggins for Word and GoogleDocs
-- You can highlight and annotate text with up to 6 colors
-- Manage projects with folders and sub-folders
-- Use tags to mark your papers
-
-> Go to [F1000Workspace](https://f1000.com/work/) and create an account. Some time before Tuesday, send me a slack / WhatsApp / e-mail with your e-mail so I can share a project with you
-
 ## Test everything
 
 After you have completed the three steps above, just download <button type="button">[this file](./PDF_test.Rmd)</button> the file. Right click on the button, select "Save link as..." ("Guardar enlace como..."), save it in your computer, and open it.
