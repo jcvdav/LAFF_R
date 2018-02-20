@@ -77,12 +77,12 @@ Sometime over the weekend (I'll send a message) I'll put the slides and files we
 
 This is what we will be modelling:
 
-\begin{equation}
-\begin{split} \label{eq:pred_prey}
-\frac{dA}{dt} = I_A - d_AA - aAS \\
-\frac{dS}{dt} = ar_SAS - d_SS -fS
+$$
+\begin{split}
+& \text{Prey:} && \frac{dN}{dt} = r N - a N P \\	 
+& \text{Predator:} && \frac{dP}{dt} = c a N P - m P
 \end{split}
-\end{equation}
+$$
 
 Do you know what it is? Full definition in class
 

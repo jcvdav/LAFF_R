@@ -24,10 +24,11 @@ Marine reserves can yield benefits to tourism \citep{viana_2017}. People have lo
 
 We will use a two-species predator-prey model, described by:
 
+
 \begin{equation}
 \begin{split} \label{eq:pred_prey}
-\frac{dA}{dt} = I_A - d_AA - aAS \\
-\frac{dS}{dt} = ar_SAS - d_SS -fS
+\frac{dN}{dt} = r N - a N P \\	 
+\frac{dP}{dt} = c a N P - m P -fP
 \end{split}
 \end{equation}
 
@@ -42,17 +43,16 @@ suppressPackageStartupMessages({
 
 ```{r}
 # Define parameters
-Ia <- 10
-da <- 0.2
-a <- 0.01
-rs <- 0.5
-ds <- 0.1
+r <- 1
+a <- 1
+c <- 0.1
+m <- 0.1
 f <- 0
 
-params <- c(Ia, da, a, rs, ds, f)
+params <- c(r, a, c, m, f)
 
 # Define initial conditions
-A0 <- 2
+A0 <- 1
 S0 <- 2
 
 values <- c(A0, S0)
@@ -66,19 +66,18 @@ t <- seq(0, 100)
 ```{r}
 predator_prey <- function(t, values, params){
   # Extract parameters
-  Ia <- params[1]
-  da <- params[2]
-  a <- params[3]
-  rs <- params[4]
-  ds <- params[5]
-  f <- params[6]
-  
+  r <- params[1]
+  a <- params[2]
+  c <- params[3]
+  m <- params[4]
+  f <- params[5]
+
   # Extract state variables
   A <- values[1]
   S <- values[2]
   
-  dAdt <- Ia - (da*A) - (a*A*S)
-  dSdt <- (a*rs*A*S) - (ds*S) - (f*S)
+  dAdt <- (r*A) - (a*A*S)
+  dSdt <- (a*c*A*S) - (m*S) - (f*S)
   
   return(list(c(dAdt, dSdt)))
 }
@@ -100,8 +99,8 @@ plot_no_fish <- ggplot(no_fishing, aes(x = Time, y = Abundance, color = Species)
 
 
 ```{r}
-f <- 0.05
-params <- c(Ia, da, a, rs, ds, f)
+f <- 0.1
+params <- c(r, a, c, m, f)
 
 fishing <- deSolve::lsoda(y = values, times = t, func = predator_prey, parms = params) %>% 
   as.data.frame() %>% 
@@ -123,7 +122,7 @@ plot_fish <- ggplot(fishing, aes(x = Time, y = Abundance, color = Species)) +
 Using Equation \ref{eq:pred_prey} we obtain the dynamics of the system, shown in Figure \ref{fig:timeseries}. The stable equilibrium values are shown in Table \ref{tab:stable_eq}.
 
 ```{r, fig.height = 5, fig.cap = "\\label{fig:timeseries}State variabel dynamics through time for an ecosystem without fishing (A) and with fishing (B)."}
-cowplot::plot_grid(plot_no_fish, plot_fish, ncol = 1, labels = "AUTO")
+plot_grid(plot_no_fish, plot_fish, ncol = 1, labels = "AUTO")
 ```
 
 ```{r}
