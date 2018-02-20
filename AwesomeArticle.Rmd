@@ -7,12 +7,9 @@ email: "jvillasenor@bren.ucsb.edu"
 abstract: "Fishing can change the whole system"
 keywords: "Fish, Fisheries, Trophic"
 corrauth: "Something"
-date: "16 de febrero de 2018"
 output:
   bookdown::pdf_document2:
-    keep_tex: yes
     template: template.tex
-    # number_sections: no
 ---
 
 ```{r setup, include=FALSE}
@@ -29,7 +26,7 @@ We will use a two-species predator-prey model, described by:
 
 \begin{equation}
 \begin{split} \label{eq:pred_prey}
-\frac{dA}{dt} = I_AA - d_AA - aAS \\
+\frac{dA}{dt} = I_A - d_AA - aAS \\
 \frac{dS}{dt} = ar_SAS - d_SS -fS
 \end{split}
 \end{equation}

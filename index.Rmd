@@ -73,12 +73,13 @@ Sometime over the weekend (I'll send a message) I'll put the slides and files we
 
 - [Rmakrdown slides](http://www.villasenor-derbez.com/intro2Rmd/CourseMaterials/intro2Rmd.html)
 - [Class materials](class_materials.zip)
+- [Class notes](notes.html)
 
 This is what we will be modelling:
 
 \begin{equation}
 \begin{split} \label{eq:pred_prey}
-\frac{dA}{dt} = I_AA - d_AA - aAS \\
+\frac{dA}{dt} = I_A - d_AA - aAS \\
 \frac{dS}{dt} = ar_SAS - d_SS -fS
 \end{split}
 \end{equation}
@@ -90,4 +91,5 @@ Do you know what it is? Full definition in class
 Other resources
 
 - [R for Data Science FREE online book](http://r4ds.had.co.nz/)
--[Guide to PDF documents in Rmarkdown](https://rmarkdown.rstudio.com/pdf_document_format.html)
+- [Guide to PDF documents in Rmarkdown](https://rmarkdown.rstudio.com/pdf_document_format.html)
+- [CSL styles](http://editor.citationstyles.org/about/)

@@ -1,0 +1,251 @@
+---
+title: "Notes"
+author: "Juan Carlos Villaseñor-Derbez"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# During presentation
+
+- Explain Rmd
+
+- Explain differential equations
+
+# Live-coding
+
+## Basic Rmd file
+
+- Open an Rmarkdown document
+- Title vs. file name
+- Explain how to choose type of output
+- Explain the default Rmd file (setup chunk)
+- Tips about options in the engine icon
+- `Knit` so they see how it ends up
+
+## Modificatios to default
+
+- Delete all, include the typical sections of a paper
+
+- To get the `LaTeX` template working:
+    - Show them the LaTeX template, and some of the metadata that needs to go in the `YAML`
+    - Set output type in the `YAML`, specifying output format and template to use:
+    - Add `rtitle`, `institution`, `email`, `abstract`, `keywords`, `corrauth`, it should look like this:
+
+```
+---
+title: "Trophic cascades and fisheries"
+rtitle: "Trophic cascades"
+author: "Juan Carlos Villaseñor-Derbez$^{*1}$"
+institution: "$^1$Bren School, UCSB"
+email: "jvillasenor@bren.ucsb.edu"
+abstract: "Fishing can change the whole system"
+keywords: "Fish, Fisheries, Trophic"
+corrauth: "Something"
+date: "16 de febrero de 2018"
+output:
+  bookdown::pdf_document2:
+    template: template.tex
+---
+```
+    - Set `echo = F`, `fig.height` and `fig.width` in the setup chunk
+    - `Knit` the document
+
+
+## Citations
+
+- To include references:
+    - Explain what the reference style file is ([Styles here](http://editor.citationstyles.org/about/))
+    - Explain what a `BibTex` file is:
+        - show them how to get it from F1000Workspace
+        - and GoogleScholar
+    - At the bottom of the file, include
+        - `\bibliographystyle{frontiersinSCNS_ENG_HUMS}`
+        - and `\bibliography{references}`
+- Cite with parentheses `\citep{}`
+    - `Knit`
+- Cite without parenthesees `\citet{}`
+    - `Knit`
+
+## Equations
+
+- Explain `\begin{split}`
+- Explain `\frac{}{}`
+- First with `$$ equation $$`
+- Replace the `$$` with `\begin{equation}
+- Use `\label{eq:pred_prey}`
+
+```
+\begin{equation}
+\begin{split} \label{eq:pred_prey}
+\frac{dA}{dt} = I_A - d_AA - aAS \\
+\frac{dS}{dt} = ar_SAS - d_SS -fS
+\end{split}
+\end{equation}
+```
+\begin{equation}
+\begin{split} \label{eq:pred_prey}
+\frac{dA}{dt} = I_A - d_AA - aAS \\
+\frac{dS}{dt} = ar_SAS - d_SS -fS
+\end{split}
+\end{equation}
+
+## Load packages
+
+- Show them how to suppress package messages with `suppressPackageStartupMessages({})`
+- Explain what each package does:
+    - `library(knitr)`
+    - `library(deSolve)`
+    - `library(cowplot)`
+    - `library(tidyverse)`
+    
+## Running the model
+
+- We will have two scenarios:
+    - a) no fishing effort, pristine seas
+    - b) fishing effort, real world
+
+- Explain what `lsoda` needs to motivate the next sections of code
+    - needs three vectors and a function:
+        - `y`: Initial conditions
+        - `times`: Places where we want to have values solved
+        - `params`: The parameters
+        - `func`: A function that contains the system
+    
+- Define the parameters for scenario a
+
+```{r, eval = F}
+# Define parameters
+Ia <- 10
+da <- 0.2
+a <- 0.01
+rs <- 0.5
+ds <- 0.1
+f <- 0
+
+params <- c(Ia, da, a, rs, ds, f)
+
+# Define initial conditions
+A0 <- 2
+S0 <- 2
+
+values <- c(A0, S0)
+
+# Time
+t <- seq(0, 100)
+```
+
+- Define the function that has the form of the equation above
+
+```{r, eval = F}
+predator_prey <- function(t, values, params){
+  # Extract parameters
+  Ia <- params[1]
+  da <- params[2]
+  a <- params[3]
+  rs <- params[4]
+  ds <- params[5]
+  f <- params[6]
+  
+  # Extract state variables
+  A <- values[1]
+  S <- values[2]
+  
+  dAdt <- Ia - (da*A) - (a*A*S)
+  dSdt <- (a*rs*A*S) - (ds*S) - (f*S)
+  
+  return(list(c(dAdt, dSdt)))
+}
+```
+
+- Show how to use `deSolve::lsoda` and step by step add code that makes it look better
+
+```{r, eval = F}
+no_fishing <- deSolve::lsoda(y = values, times = t, func = predator_prey, parms = params) %>% 
+  as.data.frame() %>% 
+  magrittr::set_colnames(value = c("Time", "Anchovies", "Sharks")) %>% 
+  gather(Species, Abundance, -Time) %>% 
+  mutate(Model = "No Fishing")
+```
+
+- Show them how to plot, first without assigning the plot to a value
+
+```{r, eval = F}
+ggplot(no_fishing, aes(x = Time, y = Abundance, color = Species)) +
+  geom_line(size = 1) +
+  scale_color_brewer(palette = "Set1")
+```
+
+- Repeat but with fishing effor this time
+
+```{r, eval = F}
+f <- 0.05
+params <- c(Ia, da, a, rs, ds, f)
+
+fishing <- deSolve::lsoda(y = values, times = t, func = predator_prey, parms = params) %>% 
+  as.data.frame() %>% 
+  magrittr::set_colnames(value = c("Time", "Anchovies", "Sharks")) %>% 
+  gather(Species, Abundance, -Time) %>% 
+  mutate(Model = "Fishing")
+```
+
+ - And plot it
+ 
+```{r, eval = F}
+gplot(fishing, aes(x = Time, y = Abundance, color = Species)) +
+  geom_line(size = 1) +
+  scale_color_brewer(palette = "Set1")
+```
+
+> But wait! Plots are not meant to be on the Methods section... And they would look way better together too.
+
+## Reults section
+
+- A results section will have a figure and a table, and text that references these
+
+- Write a couple sentences tha refeence the equation.
+
+- `cowplot`
+    - Assign the previous plots to `plot_no_fishing` and `plot_fishing`
+    - Run basic cowplot
+```{r, eval = F}
+cowplot::plot_grid(plot_no_fish, plot_fish, ncol = 1, labels = "AUTO")
+```
+    - Add figure details:
+        - `fig.height = 5`
+        - `fig.cap = "\\label{fig:timeseries}State variabel dynamics through time for an ecosystem without fishing (A) and with fishing (B)."`
+
+- Write sentence that references the figure
+
+- Create a table of stable equilibrium
+    - `rbind` the two dataframes
+    - Step by step, show how to `filter` to keep only the last values
+    - `spread` to get the table(ish) we want
+    - `select` to get rid of the `Time` column
+    - `knitr` package to creat a table
+        - `caption` that inludes a label to the table
+    - Sentence that references the table
+    - `Knit` to show the table is ugly
+    - Enter `kableExtra` to show them how to modify position
+
+```{r, eval = F}
+rbind(no_fishing, fishing) %>% 
+  filter(Time == 100) %>% 
+  spread(Model, Abundance) %>% 
+  select(-Time) %>% 
+  knitr::kable(digits = 2, caption = "\\label{tab:stable_eq}Stable equilibrium values for Sharks and Anchovies under fishing and no fishing conditions") %>% 
+  kableExtra::kable_styling(latex_options = "HOLD_position")
+```
+
+
+
+
+
+
+
+
+
