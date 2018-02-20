@@ -50,7 +50,7 @@ Your default installation of some of the packages above will allow you to genera
 
 ## Test everything
 
-After you have completed the three steps above, just download <button type="button">[this file](./PDF_test.Rmd)</button> the file. Right click on the button, select "Save link as..." ("Guardar enlace como..."), save it in your computer, and open it.
+After you have completed the three steps above, just download <button type="button">[this file](./PDF_test.Rmd)</button>. Right click on the button, select "Save link as..." ("Guardar enlace como..."), save it in your computer, and open it.
 
 Your window should look something like this:
 
