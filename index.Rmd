@@ -9,12 +9,12 @@ output:
       toc_float: yes
 ---
 
-The goal for this workshop is to step a bit away from ecology / fisheries management (just a bit), and focus more on code and skill that will help you be way more efficient (and look like a pro). If it all works, we should be able to write a manuscritp that has references, equations, figures, and tables... all within `R`! It should look like [this](AwesomeArticle.pdf).
+The goal for this workshop is to step a bit away from ecology / fisheries management (just a bit), and focus more on code and skill that will help you be way more efficient (and look like a pro). If it all works, we should be able to write a manuscritp that has references, equations, figures, and tables... all within `R`! It should look like [this](AwesomeArticle.pdf) or [this](MyManuscript.pdf), or [this](https://rawgit.com/jcvdav/ReserveEffect/master/Frontiers_Manuscript/Villasenor-Derbez.pdf).
 
 
-# **BEFORE TUESDAY!**
+# **BEFORE COURSE!**
 
-I hope that bold, all caps, exclamation is enough... but please, *please*, **please**, complete these 3 steps before Tuesday. You don't have to read all, you can just copy-paste the code, and do the things specified as
+I hope that bold, all caps, exclamation is enough... but please, *please*, **please**, complete these 3 steps before the course. You don't have to read all, you can just copy-paste the code, and do the things specified as
 
 > Text of instructions
 
@@ -66,6 +66,7 @@ R will do its thing, and if everything works, you'll get a nice(ish) PDF documen
 
 Not working? Send me a message and we'll figure out a time to meet and see what's happening
 
+# Day of course
 
 ## Files
 
@@ -75,20 +76,24 @@ Sometime over the weekend (I'll send a message) I'll put the slides and files we
 - [Class materials](class_materials.zip)
 - [Class notes](notes.html)
 
-This is what we will be modelling:
+- Manuscript files:
+    - Manuscript we did in class:
+        - [Manuscript](MyManuscript.pdf)
+        - [Manuscript source file](MyManuscript.Rmd)
+    - Manuscript with numerical simulation:
+        - [Manuscript](AwesomeArticle.pdf)
+        - [Manuscript source file](AwesomeArticle.Rmd)
 
-$$
+This is what is being modeled in the numerical simulation manuscript:
+
+\begin{equation}
 \begin{split}
 & \text{Prey:} && \frac{dN}{dt} = r N - a N P \\	 
 & \text{Predator:} && \frac{dP}{dt} = c a N P - m P
 \end{split}
-$$
+\end{equation}
 
-Do you know what it is? Full definition in class
-
-----
-
-Other resources
+## Other resources
 
 - [R for Data Science FREE online book](http://r4ds.had.co.nz/)
 - [Guide to PDF documents in Rmarkdown](https://rmarkdown.rstudio.com/pdf_document_format.html)

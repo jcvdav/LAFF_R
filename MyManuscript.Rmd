@@ -1,0 +1,70 @@
+---
+title: "Lotka-Volterra system and fisheries"
+author: "Juan Carlos Villaseñor-Derbez"
+institution: "Bren, UCSB"
+corrauth: "Bren Hall, 2400 UCSB"
+email: "jvillasenor@bren.ucsb.edu"
+abstract: "kzhbgvadjhtbdkgtkj"
+keywords: "Keyword1, Keyword2"
+output:
+  bookdown::pdf_document2:
+    template: template.tex
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+# Introduction
+
+Marine reserves can help tourism \citep{viana_2017}. Pero \citet{acevesbueno_2017} dice que el tamaño del TURF importa. \citet{costello2016} dice que arreglemos las pesquerias.
+
+\begin{equation}
+a = b
+\end{equation}
+
+# Materials and Methods
+
+We use Eq \ref{eq:slope_inter} to run our analysis.
+
+\begin{equation}
+y = mx + b
+\label{eq:slope_inter}
+\end{equation}
+
+# Results
+
+We use Eq \ref{eq:slope_inter} to get Figure \ref{fig:plot_hist}.
+
+```{r}
+suppressPackageStartupMessages({
+  library(cowplot)
+  library(ggplot2)
+})
+```
+
+```{r, fig.width = 6, fig.height = 6, fig.cap = "\\label{fig:plot_hist}Displacement as a function of hp (a), and a histogram of displacement (b)"}
+plot1 <- ggplot(data = mtcars, aes(x = disp, y = hp, color = cyl)) +
+  geom_point()
+
+plot2 <- ggplot(data = mtcars, aes(x = disp)) +
+  geom_histogram(binwidth = 20)
+
+plot_grid(plot1, plot2, nrow = 2, labels = "auto")
+```
+
+
+
+# Discusion and Conclusion
+
+\bibliographystyle{frontiersinSCNS_ENG_HUMS}
+\bibliography{references}
+
+
+
+
+
+
+
+
+
